@@ -7,9 +7,9 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-df = pd.read_csv('df_v3.csv', index_col=0)
-df_actor_pop = pd.read_csv('df_actor_actress_updated.csv',index_col=0)
-df_director_pop = pd.read_csv('director_popularities.csv',index_col=0)
+df = pd.read_csv('https://raw.githubusercontent.com/Gustaviche/MatchMyMovie/refs/heads/main/df_v3.csv', index_col=0)
+df_actor_pop = pd.read_csv('https://raw.githubusercontent.com/Gustaviche/MatchMyMovie/refs/heads/main/df_actor_actress_updated.csv',index_col=0)
+df_director_pop = pd.read_csv('https://raw.githubusercontent.com/Gustaviche/MatchMyMovie/refs/heads/main/director_popularities.csv',index_col=0)
 
 
 st.set_page_config(
