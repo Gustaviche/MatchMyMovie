@@ -576,7 +576,6 @@ elif selection == "Top 10 des films":
     else:
         st.write(f"Sélectionnez un genre")
 
-
 elif selection == "Films vus":
     # Affichage des films vus
     st.title("Films déjà vus")
@@ -638,7 +637,7 @@ elif selection == "KPI":
     # Streamlit - Interface
     st.title("Visualisation des KPI")
 
-    option = st.selectbox("Sélectionnez la Visualisation", ("Top 10 Réalisateurs par Popularité", "Top 10 Acteurs/Actrices par Popularité"))
+    option = st.selectbox("Sélectionnez la Visualisation", ("Top 10 Réalisateurs par Popularité", "Top 10 Acteurs/Actrices par Popularité","Nombre de Films par Année","Films les plus populaires par Année"))
 
     # Traitement de l'option sélectionnée
     if option == "Top 10 Réalisateurs par Popularité":
@@ -654,6 +653,66 @@ elif selection == "KPI":
         display_entities_in_rows(top_actors, 'actor_actress', 'photo_url')
         st.subheader("Graphique des Top 10 Acteurs/Actrices par Popularité")
         create_bar_chart(top_actors, 'actor_actress', 'popularity', "Top 10 Acteurs par Popularité")
+    
+    elif option == 'Nombre de Films par Année':
+
+                        # Sélection des critères par l'utilisateur
+                        threshold = st.slider("Seuil de Note Moyenne (averageRating)", 0.0, 10.0, 7.5)
+                        year_range = st.slider("Années", min_value=int(df['startYear'].min()), max_value=int(df['startYear'].max()), value=(2010, 2024))
+
+                        # Filtrer les films selon le seuil et la plage d'années
+                        filtered_films = df[(df['averageRating'] > threshold) & (df['startYear'].between(year_range[0], year_range[1]))]
+
+                        # Compter le nombre de films par année
+                        films_per_year = filtered_films.groupby('startYear').size()
+
+                        # Afficher les résultats
+                        #st.write(f"Nombre de films par année avec une note supérieure à {threshold} entre {year_range[0]} et {year_range[1]}")
+                        #st.write(films_per_year)
+
+                        # Visualiser les résultats
+                        fig, ax = plt.subplots(figsize=(12, 6))
+                        sns.barplot(x=films_per_year.index, y=films_per_year.values, palette='viridis', ax=ax)
+                        ax.set_title(f'Nombre de Films par Année à {threshold}')
+                        ax.set_xlabel('Année')
+                        ax.set_ylabel('Nombre de Films')
+                        plt.xticks(rotation=45)
+
+                        # Afficher le graphique dans Streamlit
+                        st.pyplot(fig)
+
+                        # Afficher la liste des films correspondant aux critères 
+                        st.write(f"Liste des films avec une note supérieure à {threshold} entre {year_range[0]} et {year_range[1]}:") 
+
+                        # Itérer sur les années et afficher les films correspondants 
+                        for year in range(year_range[0], year_range[1] + 1): 
+                            st.write(f"Année {year}:") 
+                            films_of_year = filtered_films[filtered_films['startYear'] == year] 
+                            for index, row in films_of_year.iterrows(): 
+                                  st.write(f"- {row['title_y']} (Note: {row['averageRating']})")
+
+    elif option == "Films les plus populaires par Année": 
+                    
+                    st.title("Top 10 Films les Plus Populaires")
+
+                    # Laisser l'utilisateur choisir l'année
+                    year_choice = st.slider("Choisissez une année", min_value=1960, max_value=2024, step=1)
+
+                    # Filtrer les films de l'année choisie
+                    df_filtered = df[df['startYear'] == year_choice]
+
+                    # Trier les films par nombre de votes et sélectionner les 10 meilleurs
+                    df_top10 = df_filtered.sort_values(by='averageRating', ascending=False).head(10)
+
+                    # Afficher les posters des 10 films les plus populaires en 5 colonnes
+                    st.write(f"Top 10 des films avec le plus de votes en {year_choice}")
+                    cols = st.columns(5)
+
+                    for i, row in enumerate(df_top10.iterrows()): 
+                           with cols[i % 5]: st.image(row[1]['poster_path'], caption=row[1]['title_y']) 
+                           # Séparer les lignes 
+                           if i == 4: 
+                                 cols = st.columns(5)
 
 elif selection == "Déconnexion":
     st.write("Vous êtes déconnecté.")
