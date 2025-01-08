@@ -305,7 +305,7 @@ center_content()
 with st.sidebar:
     selection = option_menu(
         menu_title="Menu",  # Titre du menu dans la sidebar
-        options=["Accueil",'Presentation Client','Étude de marché','Équipe',"Top 10 des films",'Filtrage des envies', "Films par mots-clés", "Films par genre","Films vus","KPI","Déconnexion"],
+        options=["Accueil","Top 10 des films",'Filtrage des envies', "Films par mots-clés", "Films par genre","Films vus","Déconnexion"],
         icons=["house-door","person-video","folder2-open","people","bar-chart", "search", "film","camera-reels","clipboard2-check","easel2","power"],
         default_index=0,
         orientation="vertical",  # Menu vertical
