@@ -493,7 +493,7 @@ elif selection == "Top 10 des films":
     genres = ["Action", "Adventure", "Animation", "Comedy", "Crime", "Drama", "Fantasy", "History", "Horror", "Music", "Mystery", "Romance", "Science Fiction", "Thriller", "War", "Western"]
 
     # Sélection du genre avec st.selectbox (ou st.radio si vous préférez)
-    genre = st.segmented_control("Choisissez un genre", options=genres)
+    genre = st.selectbox("Choisissez un genre", options=genres)
 
     # Appeler la fonction pour filtrer et obtenir les films
     top_10_films = filter_and_return_films(df, genre)
