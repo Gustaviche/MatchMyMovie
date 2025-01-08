@@ -193,7 +193,7 @@ def background():
     <style>
     /* Fond global pour l'application */
     .stApp {
-        background-image: url('https://usbeketrica.com/media/69246/download/3872959826_57043705df_k.jpg?v=1&inline=1');
+        background-image: url('https://c4.wallpaperflare.com/wallpaper/862/449/162/captain-america-the-dark-knight-terminator-the-martian-wallpaper-preview.jpg');
         background-size: cover;
         background-repeat: no-repeat;
         background-attachment: fixed;
