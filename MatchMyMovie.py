@@ -193,7 +193,7 @@ def background():
     <style>
     /* Fond global pour l'application */
     .stApp {
-        background-image: url('poster_film.jpg');
+        background-image: url('https://github.com/Gustaviche/MatchMyMovie/blob/main/poster_film.jpg?raw=true');
         background-size: cover;
         background-repeat: no-repeat;
         background-attachment: fixed;
@@ -221,82 +221,6 @@ def center_content():
     </style>
     """, unsafe_allow_html=True)
 
-# Fonction générique pour afficher les entités (réalisateurs/acteurs) en lignes
-def display_entities_in_rows(top_entities, entity_key, photo_column):
-    # Définir la répartition des entités par ligne
-    entity_rows = [
-        [top_entities.iloc[0]],  # Ligne 1 : Top 1
-        [top_entities.iloc[1], top_entities.iloc[2]],  # Ligne 2 : Top 2 et 3
-        [top_entities.iloc[3], top_entities.iloc[4], top_entities.iloc[5]],  # Ligne 3 : Top 4, 5, 6
-        [top_entities.iloc[6], top_entities.iloc[7], top_entities.iloc[8], top_entities.iloc[9]],  # Ligne 4 : Top 7, 8, 9, 10
-    ]
-
-    for row in entity_rows:
-        cols = st.columns(len(row))  # Créer une colonne par entité dans la ligne
-        for i, entity in enumerate(row):
-            with cols[i]:
-                # Vérifier si l'image existe
-                if pd.notna(entity[photo_column]):
-                    st.markdown(
-                        f"""
-                        <div style="text-align: center;">
-                            <img src="{entity[photo_column]}" alt="{entity[entity_key]}" width="150">
-                            <p><strong>{entity[entity_key]}</strong></p>
-                            <p>Nombre de films : {entity['number_of_movies']}</p>
-                        </div>
-                        """,
-                        unsafe_allow_html=True,
-                    )
-                else:
-                    st.markdown(
-                        f"""
-                        <div style="text-align: center;">
-                            <p><strong>{entity[entity_key]}</strong></p>
-                            <p>Image non disponible</p>
-                            <p>Popularité totale : {entity['popularity']}</p>
-                            <p>Nombre de films : {entity['number_of_movies']}</p>
-                        </div>
-                        """,
-                        unsafe_allow_html=True,
-                    )
-
-# Fonction générique pour créer un graphique en barres horizontales
-def create_bar_chart(data, x_col, y_col, title):
-    plt.figure(figsize=(10, 6))
-    ax = plt.gca()  # Récupérer l'axe actuel
-    
-    # Créer un graphique à barres avec Seaborn
-    sns.barplot(x=x_col, y=y_col, data=data, ax=ax, palette="viridis")
-    
-    # Ajouter un titre
-    ax.set_title(title)
-    
-    # Ajouter des étiquettes aux axes
-    ax.set_xlabel(y_col)
-    ax.set_ylabel(x_col)
-    
-    # Afficher le graphique
-    plt.xticks(rotation=45, ha='right')
-    plt.tight_layout()
-    st.pyplot(plt) 
-# Fonction pour calculer les Top 10 des réalisateurs/acteurs par popularité
-def get_top_10_entities_by_popularity(df, entity_key, photo_dict):
-    # Grouper par l'entité (réalisateur ou acteur) et compter le nombre de films (lignes) et sommer la popularité
-    grouped_entities = df.groupby(entity_key).agg({
-        'popularity': 'sum',  # Somme de la popularité pour chaque entité
-    }).reset_index()
-
-    # Compter le nombre de films par entité (cela correspond au nombre de lignes par entité)
-    grouped_entities['number_of_movies'] = df.groupby(entity_key).size().values
-    
-    # Trier par popularité décroissante
-    top_entities = grouped_entities.sort_values(by='popularity', ascending=False).head(10)
-    
-    # Ajouter les URLs des photos
-    top_entities['photo_url'] = top_entities[entity_key].map(photo_dict)
-    
-    return top_entities
-
 background()
 
 center_content()
@@ -305,8 +229,8 @@ center_content()
 with st.sidebar:
     selection = option_menu(
         menu_title="Menu",  # Titre du menu dans la sidebar
-        options=["Accueil","Top 10 des films",'Filtrage des envies', "Films par mots-clés", "Films par genre","Films vus","Déconnexion"],
-        icons=["house-door","bar-chart", "search", "film","camera-reels","clipboard2-check","power"],
+        options=["Accueil","Top 10 des films", "Films par mots-clés", "Films par genre","Films vus","Déconnexion"],
+        icons=["house-door","bar-chart", "film","camera-reels","clipboard2-check","power"],
         default_index=0,
         orientation="vertical",  # Menu vertical
         styles={
@@ -325,27 +249,7 @@ with st.sidebar:
 if selection == "Accueil":
     st.title("Bienvenue sur MatchMyMovie")
     st.subheader("Retrouvez des films qui matchent avec vos envies !")
-    col1, col2 ,col3, col4 = st.columns(4)
-    with col1:
-        st.image("https://image.tmdb.org/t/p/original/v0dj9NVPFTX0bv5NtqxK99i1Ae3.jpg") #Mission: Impossible - Rogue Nation 
-        st.image("https://image.tmdb.org/t/p/original/sNL1aPGCMFmcnNDFWVUKehO3Vjr.jpg") #OSS 117 : Rio ne répond plus
-        st.image("https://image.tmdb.org/t/p/original/dfht1lGq2ALbrRkMj35dUrj5kHG.jpg")  #Bienvenue chez les Ch'tis
-    with col2:
-        st.image("https://image.tmdb.org/t/p/original/smFyhZHuOCZEmH0kfXOrJLC3Acx.jpg") #Toy Story 4 
-        st.image("https://image.tmdb.org/t/p/original/yJm61MmTMjOmNXxPxdoaIkdqnOm.jpg") # Harry Potter and the Deathly Hallows 
-        st.image("https://image.tmdb.org/t/p/original/A0Th0x8QIzP0njrFAJnYQ5ouIoB.jpg") #Forrest Gump
-    with col3:
-        st.image("https://image.tmdb.org/t/p/original/tz4DUBcxU7UowOIJwqvQfdWkU2U.jpg") #The Polar Express
-        st.image("https://image.tmdb.org/t/p/original/gdUJ6ECIHNE5M2HImGaBOfb8jR2.jpg")  #Intouchables
-        st.image("https://image.tmdb.org/t/p/original/ybjooZMNlRBaFNfs52XqONc4Xyw.jpg")#Deadpool 2"
-    with col4:
-        st.image("https://image.tmdb.org/t/p/original/obsGPyNOAwkQbLRQOHR6a21VT23.jpg")#Rogue One: A Star Wars Story
-        st.image("https://image.tmdb.org/t/p/original/aZ7JWKenzR28H4bCgFJwdCuHovW.jpg")#Babysitting 
-        st.image("https://image.tmdb.org/t/p/original/2k0mHrCtIydYR0RA4RyjhRc2hNN.jpg") #Scream'''
-                
-elif selection == "Filtrage des envies":
     st.title("Recommandations")
-    st.image("https://img.freepik.com/photos-premium/clap-cinema-loupe-tableau-noir-craie-industrie-du-cinema-divertissement_175682-23332.jpg?w=740")
     
     # Sélection du genre
     genre = st.selectbox("Sélectionner un genre", ["", "Action", 'Adventure', 'Animation', "Comedy", "Crime", "Drama", 'Fantasy', 'History', 'Horror', 'Music', 'Mystery', 'Romance', 'Science Fiction', 'Thriller', 'War', 'Western'])
