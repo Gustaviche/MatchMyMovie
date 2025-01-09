@@ -193,7 +193,7 @@ def background():
     <style>
     /* Fond global pour l'application */
     .stApp {
-        background-image: url('https://c4.wallpaperflare.com/wallpaper/862/449/162/captain-america-the-dark-knight-terminator-the-martian-wallpaper-preview.jpg');
+        background-image: url('poster_film.jpg');
         background-size: cover;
         background-repeat: no-repeat;
         background-attachment: fixed;
